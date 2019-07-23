@@ -1,101 +1,93 @@
 // global variables
-let n ;                  // n will be used when user enter input for round number
 let computerScore = 0;
 let playerScore = 0;
 let actions = ["rock", "paper", "scissors"];
-let playerSelection;
-let computerSelection;
-      
-game();
+let round = 0;
+let tie = 0;
 
+var newDiv = document.createElement('div');
+var container = document.getElementById('container');
+container.appendChild(newDiv);
 
-function game() {
-  getRound();
-  for(i = 0 ; i<n; i++){
-  playerPlay();
-  computerPlay();
-  calcScore();
-  resultFinal();  
-  }       
-}
-
-// get player's choice
-function playerPlay() {
-  return playerSelection = prompt("Pick your move: Rock, Paper or Scissors! ");
-}
 
 // get computer's choice
 function computerPlay() {
   return computerSelection = actions[Math.floor(Math.random() * actions.length)];
 }
-            
-// get round number player wants to play
-function getRound() {
-  let roundNumber = prompt("Enter the number of rounds you want to play! ");
-  if (isNaN(roundNumber)) {
-    alert(roundNumber + " is not a number"); window.location.reload(false);}
-  else {
-    n = roundNumber;
-    alert("Game is starting! You must open developer console in order to play!")
-  }
-}
 
-// calculate score
-function calcScore() {
-  let result = playRound(playerSelection, computerSelection);
-  if (result === "win") {
-    playerScore++;
-    console.log("YOU: "+ playerScore + " COMPUTER: " + computerScore);
-  }
-  if (result === "lose") {
-    computerScore++;
-    console.log("YOU: "+ playerScore + " COMPUTER: " + computerScore);
-  }
-  if (result === "even") {
-    console.log("YOU: "+ playerScore + " COMPUTER: " + computerScore);
-  }
+function hideButtons(elementID){
+  document.getElementById(elementID).style.visibility = "hidden";
 }
 
 // display final result of the game
 function resultFinal() {
-    if (i === (n-1)) {
-    if (playerScore > computerScore){
-      alert("FINAL WINNER IS YOU!!")
-    }
-    if (playerScore < computerScore){
-      alert("FINAL WINNER IS COMPUTER!")
-    }
-    if (playerScore === computerScore){
-      alert("THE GAME IS EVEN!")
-    }
-   }
+  if (playerScore === 5){
+    console.log("FINAL WINNER IS YOU!!");
   }
+  if (computerScore === 5){
+    console.log("FINAL WINNER IS COMPUTER!");
+  }
+}
+
     
  // check winner of round   
-function playRound(playerSelection, computerSelection) {
-  playerSelection = playerSelection.toLowerCase();
-  computerSelection = computerSelection.toLowerCase();
+function playRound(e) {
+  const roundCount = document.querySelector("#roundCount");
+  const playerWins = document.querySelector("#playerWins");
+  const computerWins = document.querySelector("#computerWins");
+  const tied = document.querySelector("#tied");
+  const text = document.querySelector("#text");
+
+  let playerSelection = e.target.id;
+  let computerSelection = computerPlay();
+  round++;
+  roundCount.textContent = round;
+
+  
         //player wins case
   if ((playerSelection === "rock" && computerSelection ==="scissors") || (playerSelection === "paper" && computerSelection ==="rock") || (playerSelection === "scissors" && computerSelection ==="paper")) {
     console.log("You win. " + playerSelection + " beats " + computerSelection + "! ")
-    return 'win';
+    playerScore++;
+    text.textContent = "Horray! "+playerSelection+" beats "+computerSelection+"!";
+    playerWins.textContent = playerScore;
   }
         //computer wins case
   if((playerSelection === "scissors" && computerSelection ==="rock") || (playerSelection === "rock" && computerSelection ==="paper") || (playerSelection === "paper" && computerSelection ==="scissors")) {
     console.log("You lose. " + computerSelection + " beats " + playerSelection + "! ")
-    return  'lose';
+    computerScore++;
+    text.textContent = "Oh no! "+computerSelection+" beats "+playerSelection+"!";
+    computerWins.textContent = computerScore;
   }
         //even case
   if((playerSelection === "scissors" && computerSelection ==="scissors") || (playerSelection === "rock" && computerSelection ==="rock") || (playerSelection === "paper" && computerSelection ==="paper"))  {
     console.log("You both choose "+ playerSelection + " . Round is even! ")
-    return 'even';
+    console.log("YOU: "+ playerScore + " COMPUTER: " + computerScore);
+    tie++;
+    text.textContent = "It's a tie!"
+    tied.textContent = tie;
   }
-  else{
-        //wrong input
-    alert(playerSelection + " is wrong input, Try again!");
-    i--; 
-    return NaN;
-  }
+
+  gameCheck();
 }
-    
-   
+
+function gameCheck(){
+  if (playerScore === 5){
+    text.textContent = "WELL DONE! FINAL WINNER IS YOU!";
+    hideButtons("container");
+  }
+  if (computerScore === 5){
+    text.textContent = "OH NO! FINAL WINNER IS COMPUTER!";
+    hideButtons("container");
+  }
+
+}
+
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => {
+    button.addEventListener('click', playRound);
+});
+
+function resetButton() {
+  document.getElementById("results").reset();
+}
+

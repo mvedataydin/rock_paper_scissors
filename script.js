@@ -43,7 +43,6 @@ function playRound(e) {
   round++;
   roundCount.textContent = round;
 
-  
         //player wins case
   if ((playerSelection === "rock" && computerSelection ==="scissors") || (playerSelection === "paper" && computerSelection ==="rock") || (playerSelection === "scissors" && computerSelection ==="paper")) {
     console.log("You win. " + playerSelection + " beats " + computerSelection + "! ")
